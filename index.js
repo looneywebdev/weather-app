@@ -84,8 +84,7 @@ function displayCurrent(result) {
     $('.city').append(`<p>Current Temperature: ${result.current_observation.temperature_string}</p>`);
     $('.city').append(`<p>The relative humidity is: ${result.current_observation.relative_humidity}</p>`);
     $('.city').append(`<p>Wind: ${result.current_observation.wind_string}</p>`);
-    $('.buttons').toggleClass("hidden");
-    $('.js-search-results').html(`<p>Click a button above to get awesome weather data!</p>`);
+    getStarted();
 }
 //function that renders result content structure
 
@@ -95,6 +94,13 @@ function renderResult(result) {
         <img src="${result.icon_url}" alt="result icon">
         <p>${result.fcttext}</p>
       </div>`;
+}
+
+//fuction that presents buttons and instructions
+
+function getStarted() {
+    $('.buttons').toggleClass("hidden");
+    $('.js-search-results').html(`<p>Click a button above to get awesome weather data!</p>`);
 }
   //function that displays data in html to the end user
 
