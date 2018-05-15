@@ -1,0 +1,91 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+  }
+  
+body { 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-repeat:no-repeat;
+  background-size:contain;
+  background-position:center;
+  max-width: 600px;
+  max-height: 600px;
+  margin: 0 auto;
+}
+
+.day {
+  background: url(https://images.unsplash.com/photo-1419833173245-f59e1b93f9ee?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=c3173da6dc330f4f4073b411732825f0&auto=format&fit=crop&w=1650&q=80) no-repeat center center fixed;
+  }
+  
+  .night {
+    background: url(https://images.unsplash.com/photo-1520330461350-508fab483d6a?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=91a464ed115106fe90b9fb81144969ea&auto=format&fit=crop&w=1650&q=80) no-repeat center center fixed;
+  }
+
+main {
+  border: 7px dotted rgba(230, 0, 126, 0.8);
+  /* box-shadow: inset 0 -3px 0 0 #000, 0 3px 0 0 #000; */
+  padding: 5px;
+  margin-top: 10px;
+  }
+  
+h1 {
+    text-align: center;
+    font-size: 3em;
+    font-family: 'Cabin', sans-serif;
+    /* color: #00e668; */
+    color: white;
+    font-weight: bolder;
+    background-color: #007ee6;
+    padding: 20px;
+  }
+
+  .buttons {
+    margin: 0;
+  }
+
+.js-button {
+
+  background-color: #e6007e;
+  font-size: 1em;
+  text-transform: uppercase;
+  height: 70px;
+  color: white;
+  font-weight: bold;
+  width: 33.333333333333333333333333%;
+  float: left;
+  transition: background 500ms ease;
+}
+
+.js-button:hover {
+  cursor: pointer;
+  background-color: #f8a3d3;
+}
+  
+.js-search-results {
+    border: 1px solid black;
+    background-color: #007ee6;
+    color: white;
+    clear: left;
+    text-align: center;
+}
+
+p {
+    font-weight: bold;
+    padding: 5px;
+}
+
+.city {
+  text-align: center;
+  background-color: #00e668;
+}
+
+.hidden {
+  display: none;
+}
+
+.forecast-data {
+  border: 1px solid black;
+}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Weather App</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Syncopate:700" rel="stylesheet">
+  </head>
+  <body>
+    <main class="main" role="main">
+      <h1>Weather App</h1>
+      <section class="actions">
+        <div class="city"></div>
+        <div class="buttons hidden">
+          <button type="button" class="forecast js-button" role="button">Three Day Forecast</button>
+          <button type="button" class="almanac js-button" role="button">Almanac Data</button>
+          <button type="button" class="sunrise js-button" role="button">Sunrise/Sunset Times</button>
+        </div>
+        <div class="js-search-results">
+          <p>Getting current conditions for your location...</p>
+        </div>
+      </section>
+    </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="index.js"></script>
+</body>
+</html>
