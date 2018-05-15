@@ -1,6 +1,4 @@
-// var latitude = 0
-// var longitude = 0
-
+//function once location has been identified
 function success(position) {
     console.log('successful');
     var lat = position.coords.latitude;
@@ -10,6 +8,7 @@ function success(position) {
     buttonClicks(lat,long);
 }
 
+//function to house all click event listeners
 function buttonClicks(lat, long) {
     handleForecast(lat, long);
     handleSunrise(lat, long);
@@ -17,6 +16,7 @@ function buttonClicks(lat, long) {
     handleCurrent(lat, long);
 }
 
+//individual click event functions
 function handleForecast(lat, long) {
     console.log("Listening for click on Forecast");
     $('.forecast').on('click', function (ev){   
@@ -49,13 +49,12 @@ function handleCurrent(lat, long) {
     });
 }
 
-
+//function if an error is identified
 function error(position) {
       console.log('refresh browser and allow it to see your location');
 }
 
-  //function for current conditions given lat, long
-
+//function for current conditions given lat, long
 function callApi(latitude, longitude, callback) {
     const settings =  {
         url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/conditions/q/${latitude},${longitude}.json`,
@@ -65,6 +64,7 @@ function callApi(latitude, longitude, callback) {
     $.ajax(settings);
 }
 
+//function to set background image to either day sky or night sky depending on whether the current time is before or after the sunset time
 function initialSunset(results) {
     const sunsetTime = `${results.sun_phase.sunset.hour}:${results.sun_phase.sunset.minute}`;
     
@@ -78,6 +78,7 @@ function initialSunset(results) {
     }
 }
 
+//function to display current conditions and then load buttons for the rest of the user experience
 function displayCurrent(result) {
     $('.city').html(`<h2 class="city-name">${result.current_observation.display_location.full}</h2>`);
     $('.city').append(`<img src="${result.current_observation.icon_url}">`);
@@ -86,8 +87,8 @@ function displayCurrent(result) {
     $('.city').append(`<p>Wind: ${result.current_observation.wind_string}</p>`);
     getStarted();
 }
-//function that renders result content structure
 
+//function that renders result content structure
 function renderResult(result) {
     return `<div class="forecast-data">
         <h3>${result.title}</h3>
@@ -96,14 +97,14 @@ function renderResult(result) {
       </div>`;
 }
 
-//fuction that presents buttons and instructions
+//fuction that presents buttons and instructions for seeing more data for current location
 
 function getStarted() {
     $('.buttons').toggleClass("hidden");
     $('.js-search-results').html(`<p>Click a button above to get awesome weather data!</p>`);
 }
-  //function that displays data in html to the end user
 
+//function that displays data in html to the end user
 function displayForecast(result) {
     const results = result.forecast.txt_forecast.forecastday.map(renderResult);
     $('.js-search-results').html(results);
@@ -119,6 +120,7 @@ function displaySunrise(result) {
     $('.js-search-results').append(`<p>Sunset Time: ${result.sun_phase.sunset.hour}:${result.sun_phase.sunset.minute}</p>`);
 }
 
+//functions that send GET request to wunderground API
 function callForecastApi(latitude, longitude, callback) {
     const settings =  {
         url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/forecast/q/${latitude},${longitude}.json`,
@@ -155,8 +157,8 @@ function callCurrentApi(latitude, longitude, callback) {
     $.ajax(settings);
 }
 
+//function that gets location using geolocation api
 function getLocation() {
-  //geolocation api call
   navigator.geolocation.getCurrentPosition(success, error);
 }
 
