@@ -92,7 +92,7 @@ function displayCurrent(result) {
 function renderResult(result) {
     return `<div class="forecast-data">
         <h3>${result.title}</h3>
-        <img src="${result.icon_url}">
+        <img src="${result.icon_url}" alt="result icon">
         <p>${result.fcttext}</p>
       </div>`;
 }
