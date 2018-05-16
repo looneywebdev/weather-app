@@ -1,3 +1,5 @@
+let userLocationBlocked = false;
+
 //function once location has been identified
 function success(position) {
     console.log('successful');
@@ -48,10 +50,15 @@ function handleCurrent(lat, long) {
         callCurrentApi(lat, long, displayCurrent);
     });
 }
-
 //function if an error is identified
-function error(position) {
-      console.log('refresh browser and allow it to see your location');
+function error() {
+    //latitude: 36.0868649, longitude: -115.31110550000001  
+    userLocationBlocked = true;
+    var latitude = 36.0868649;
+    var longitude = -115.31110550000001;
+    callApi(latitude, longitude, displayCurrent);
+    callSunsetApi(latitude, longitude, initialSunset);
+    buttonClicks(latitude,longitude);
 }
 
 //function for current conditions given lat, long
@@ -80,11 +87,27 @@ function initialSunset(results) {
 
 //function to display current conditions and then load buttons for the rest of the user experience
 function displayCurrent(result) {
-    $('.city').html(`<h2 class="city-name">${result.current_observation.display_location.full}</h2>`);
-    $('.city').append(`<img src="${result.current_observation.icon_url}">`);
-    $('.city').append(`<p>Current Temperature: ${result.current_observation.temperature_string}</p>`);
-    $('.city').append(`<p>The relative humidity is: ${result.current_observation.relative_humidity}</p>`);
-    $('.city').append(`<p>Wind: ${result.current_observation.wind_string}</p>`);
+    let defaultLocation = '';
+    if (userLocationBlocked) {
+        defaultLocation = 'Showing Default Location: ';
+    }
+    const {
+        display_location,
+        icon_url,
+        temperature_string,
+        relative_humidity,
+        wind_string
+    } = result.current_observation;
+
+    $('.city')
+        .html(`
+        <h2 class="city-name">${defaultLocation}${display_location.full}</h2>
+        <img src="${icon_url}">
+        <p>Current Temperature: ${temperature_string}</p>
+        <p>The relative humidity is: ${relative_humidity}</p>
+        <p>Wind: ${wind_string}</p>`
+    );
+
     getStarted();
 }
 

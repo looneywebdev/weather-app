@@ -9,8 +9,8 @@ This is the first Capstone project for the Thinkful Full Stack Flex program.
     <img src="https://github.com/looneywebdev/weather-app/blob/master/weatherapphome.png?raw=true" width="400">
  
 - Allow browser to get location.
-![Location Permission]("Location Permission")
-<img src="https://github.com/looneywebdev/weather-app/blob/master/locationpermission.png?raw=true " width="400">
+
+    <img src="https://github.com/looneywebdev/weather-app/blob/master/locationpermission.png?raw=true " width="400">
 
 - Select Almanac Data, Sunrise / Sunset Data, or Three Day Forecast for more weather information.
 
