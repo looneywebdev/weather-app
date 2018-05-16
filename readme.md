@@ -5,11 +5,17 @@ This is the first Capstone project for the Thinkful Full Stack Flex program.
 ## Instructions
 - Installation not required.
 - Go to [Weather App](https://looneywebdev.github.io/weather-app/).
-![Homepage Screenshot](/Users/HeatherMarieLooney/Desktop/weather-app/weatherapphome.png "Homepage Screenshot")
+
+    <img src="https://github.com/looneywebdev/weather-app/blob/master/weatherapphome.png?raw=true" width="400">
+ 
 - Allow browser to get location.
-![Location Permission](/Users/HeatherMarieLooney/Desktop/weather-app/locationpermission.png "Location Permission")
+![Location Permission]("Location Permission")
+<img src="https://github.com/looneywebdev/weather-app/blob/master/locationpermission.png?raw=true " width="400">
+
 - Select Almanac Data, Sunrise / Sunset Data, or Three Day Forecast for more weather information.
-![All Options](/Users/HeatherMarieLooney/Desktop/weather-app/weatherapp.png "All Options")
+
+    <img src="https://github.com/looneywebdev/weather-app/blob/master/weatherapp.png?raw=true" width="400">
+
 ### Technology Used
 - HTML
 - CSS
