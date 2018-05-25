@@ -1,96 +1,86 @@
-let userLocationBlocked = false;
+let userInput = '';
 
 //function once location has been identified
 function success(position) {
     console.log('successful');
     var lat = position.coords.latitude;
     var long = position.coords.longitude;
-    callApi(lat, long, displayCurrent);
-    callSunsetApi(lat, long, initialSunset);
-    buttonClicks(lat,long);
+    userInput = `${lat},${long}`;
+    $('.buttons').removeClass('hidden');
+    callApi(userInput, displayCurrent);
+    console.log(userInput);
 }
 
-//function to house all click event listeners
-function buttonClicks(lat, long) {
-    handleForecast(lat, long);
-    handleSunrise(lat, long);
-    handleAlmanac(lat, long);
-    handleCurrent(lat, long);
-}
-
-//individual click event functions
-function handleForecast(lat, long) {
+//individual click event listening functions
+function handleForecast() {
     console.log("Listening for click on Forecast");
     $('.forecast').on('click', function (ev){   
         ev.preventDefault();
-        callForecastApi(lat,long, displayForecast);
+        callForecastApi(userInput, displayForecast);
     });
 }
 
-function handleSunrise(lat, long) {
+function handleSunrise() {
     console.log("Listening for click on Sunrise");
     $('.sunrise').on('click', function(ev) {
         ev.preventDefault();
-        callSunsetApi(lat, long, displaySunrise);
+        callSunsetApi(userInput, displaySunrise);
     });
 }
 
-function handleAlmanac(lat, long) {
+function handleAlmanac() {
     console.log("Listening for click on Almanac");
     $('.almanac').on('click', function(ev){
         ev.preventDefault();
-        callAlmanacApi(lat, long, displayAlmanac);
+        callAlmanacApi(userInput, displayAlmanac);
     });
 }
 
-function handleCurrent(lat, long) {
+function handleCurrent() {
     console.log("Listening for click on Current");
     $('.current').on('click', function(ev){
         ev.preventDefault();
-        callCurrentApi(lat, long, displayCurrent);
+        callCurrentApi(userInput, displayCurrent);
     });
 }
-//function if an error is identified
+
+function handleFindMe() {
+    console.log("Listening for click on Find Me");
+    $('.find-me').on('click', function(ev) {
+        ev.preventDefault();
+        getLocation();
+    });
+  }
+
+// //function if an error is identified
 function error() {
-    //latitude: 36.0868649, longitude: -115.31110550000001  
-    userLocationBlocked = true;
-    var latitude = 36.0868649;
-    var longitude = -115.31110550000001;
-    callApi(latitude, longitude, displayCurrent);
-    callSunsetApi(latitude, longitude, initialSunset);
-    buttonClicks(latitude,longitude);
+console.log('Submit manual zipzode.');
 }
 
-//function for current conditions given lat, long
-function callApi(latitude, longitude, callback) {
+//function for current conditions given userInput
+function callApi(userInput, callback) {
     const settings =  {
-        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/conditions/q/${latitude},${longitude}.json`,
+        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/conditions/q/${userInput}.json`,
         dataType: "jsonp",
         success: callback
     };
     $.ajax(settings);
 }
 
-//function to set background image to either day sky or night sky depending on whether the current time is before or after the sunset time
-function initialSunset(results) {
-    const sunsetTime = `${results.sun_phase.sunset.hour}:${results.sun_phase.sunset.minute}`;
-    
-    const nowTime = moment(Date.now()).format('HH:mm');
-    //
-    const isDay = moment(sunsetTime, 'HH:mm').isAfter(moment(nowTime, 'HH:mm'));
-    if (isDay) {
-        $('body').addClass('day');
-    } else {
-        $('body').addClass('night');
-    }
+function  displayWeatherData(result){
+    $('.city-name').html(`<h2 class='city'>${result.current_observation.display_location.full}</h2>`);
+
+    $('.js-search-results')
+    .html(`
+    <img class="picture" src="${result.current_observation.icon_url}">
+    <p>Current Temperature: ${result.current_observation.temperature_string}</p>
+    <p>The relative humidity is: ${result.current_observation.relative_humidity}</p>
+    <p>Wind: ${result.current_observation.wind_string}</p>`
+    );
 }
 
 //function to display current conditions and then load buttons for the rest of the user experience
 function displayCurrent(result) {
-    let defaultLocation = '';
-    if (userLocationBlocked) {
-        defaultLocation = 'Showing Default Location: ';
-    }
     const {
         display_location,
         icon_url,
@@ -99,16 +89,15 @@ function displayCurrent(result) {
         wind_string
     } = result.current_observation;
 
-    $('.city')
+    $('.city-name').html(`<h2 class="city-name">${display_location.full}</h2>`);
+
+    $('.js-search-results')
         .html(`
-        <h2 class="city-name">${defaultLocation}${display_location.full}</h2>
         <img src="${icon_url}">
         <p>Current Temperature: ${temperature_string}</p>
         <p>The relative humidity is: ${relative_humidity}</p>
         <p>Wind: ${wind_string}</p>`
     );
-
-    getStarted();
 }
 
 //function that renders result content structure
@@ -120,13 +109,6 @@ function renderResult(result) {
       </div>`;
 }
 
-//fuction that presents buttons and instructions for seeing more data for current location
-
-function getStarted() {
-    $('.buttons').toggleClass("hidden");
-    $('.js-search-results').html(`<p>Click a button above to get awesome weather data!</p>`);
-}
-
 //function that displays data in html to the end user
 function displayForecast(result) {
     const results = result.forecast.txt_forecast.forecastday.map(renderResult);
@@ -134,55 +116,101 @@ function displayForecast(result) {
 }
 
 function displayAlmanac(result) {
-    $('.js-search-results').html(`<p>Record High: ${result.almanac.temp_high.record.F} degrees F in ${result.almanac.temp_high.recordyear}</p>`);
-    $('.js-search-results').append(`<p>Record Low: ${result.almanac.temp_low.record.F} degrees F in ${result.almanac.temp_low.recordyear}</p>`);
+    $('.js-search-results')
+    .html(`<section class="almanac-data">
+    <div class="high">
+    <p><span class="record-high">${result.almanac.temp_high.record.F} F</span>
+    <p><span class="year">${result.almanac.temp_high.recordyear}</p>
+    </div>
+    <div class="low">
+    <p><span class="record-low">${result.almanac.temp_low.record.F} F</span></p>
+    <p><span class="year">${result.almanac.temp_low.recordyear}</span></p>
+    </div>
+    </section>`
+    );
 }
 
 function displaySunrise(result) {
-    $('.js-search-results').html(`<p>Sunrise Time: ${result.sun_phase.sunrise.hour}:${result.sun_phase.sunrise.minute}</p>`);
-    $('.js-search-results').append(`<p>Sunset Time: ${result.sun_phase.sunset.hour}:${result.sun_phase.sunset.minute}</p>`);
+    $('.js-search-results')
+    .html(`
+    <section class="sunrise-sunset">
+    <div class= "rise"><img class="sun" src="sunrise.png" alt="sunrise icon"><p span class="sunrise-time">${result.sun_phase.sunrise.hour}:${result.sun_phase.sunrise.minute}</span></p></div>
+    <div class= "set"><img class="sun" src="sunset.png" alt="sunset icon"><p span class="sunset-time">${result.sun_phase.sunset.hour}:${result.sun_phase.sunset.minute}</span></p></div>
+    </section>`
+    );
 }
 
 //functions that send GET request to wunderground API
-function callForecastApi(latitude, longitude, callback) {
+
+function callSunsetApi(userInput, callback) {
     const settings =  {
-        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/forecast/q/${latitude},${longitude}.json`,
+        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/astronomy/q/${userInput}.json`,
         dataType: "jsonp",
+        success: callback
+    };
+    $.ajax(settings);
+}
+
+function callForecastApi(userInput, callback) {
+    const settings =  {
+        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/forecast/q/${userInput}.json`,
+        dataType: "jsonp",
+        success: callback
+    };
+    $.ajax(settings);
+}
+
+function callAlmanacApi(userInput, callback) {
+    const settings = {
+        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/almanac/q/${userInput}.json`,
+        dataType: "jsonp",
+        success: callback
+    };
+    $.ajax(settings);
+}
+
+function callCurrentApi(userInput, callback) {
+    const settings =  {
+        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/conditions/q/${userInput}.json`,
+        dataType: "jsonp",
+        success: callback
+    };
+    $.ajax(settings);
+}
+
+function callZipApi(userInput, callback) {
+    const settings =  {
+        url : `https://api.wunderground.com/api/5f1b6d8103e5bf4c/geolookup/conditions/q/${userInput}.json`,
+        dataType : "jsonp",
         success: callback
         };
         $.ajax(settings);
 }
 
-function callSunsetApi(latitude, longitude, callback) {
-    const settings = {
-        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/astronomy/q/${latitude},${longitude}.json`,
-        dataType: "jsonp",
-        success: callback
-    };
-    $.ajax(settings);
-}
-
-function callAlmanacApi(latitude, longitude, callback) {
-    const settings = {
-        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/almanac/q/${latitude},${longitude}.json`,
-        dataType: "jsonp",
-        success: callback
-    };
-    $.ajax(settings);
-}
-
-function callCurrentApi(latitude, longitude, callback) {
-    const settings =  {
-        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/conditions/q/${latitude},${longitude}.json`,
-        dataType: "jsonp",
-        success: callback
-    };
-    $.ajax(settings);
-}
-
 //function that gets location using geolocation api
 function getLocation() {
-  navigator.geolocation.getCurrentPosition(success, error);
-}
+    return navigator.geolocation.getCurrentPosition(success, error);
+  }
 
-getLocation();
+//function that listens to manual input
+function searchFormSubmit() {
+    $('.js-form').submit(ev => {
+        ev.preventDefault();
+        const queryTarget = $(ev.currentTarget).find('#zipcode');
+        const query = queryTarget.val();
+        queryTarget.val('');
+        userInput = `${query}`;
+        console.log(userInput);
+        $('.buttons').removeClass('hidden');
+        callZipApi(userInput, displayWeatherData);
+    });
+  }
+
+$(document).ready(function (){
+    searchFormSubmit();
+    handleFindMe();  
+    handleForecast();
+    handleSunrise();
+    handleAlmanac();
+    handleCurrent();
+  });
