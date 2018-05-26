@@ -79,7 +79,10 @@ function  displayWeatherData(result){
     );
 }
 
+
+
 //function to display current conditions and then load buttons for the rest of the user experience
+//display
 function displayCurrent(result) {
     const {
         display_location,
@@ -88,12 +91,15 @@ function displayCurrent(result) {
         relative_humidity,
         wind_string
     } = result.current_observation;
+    
+    let newUrl = icon_url.replace(/http/i, 'https');
+    console.log(newUrl);
 
     $('.city-name').html(`<h2 class="city-name">${display_location.full}</h2>`);
 
     $('.js-search-results')
         .html(`
-        <img src="${icon_url}">
+        <img src="${newUrl}">
         <p>Current Temperature: ${temperature_string}</p>
         <p>The relative humidity is: ${relative_humidity}</p>
         <p>Wind: ${wind_string}</p>`
@@ -101,10 +107,13 @@ function displayCurrent(result) {
 }
 
 //function that renders result content structure
+//printing image unsecurely
 function renderResult(result) {
+    let newUrl = result.icon_url.replace(/http/i, 'https');
+    console.log(newUrl);
     return `<div class="forecast-data">
         <h3>${result.title}</h3>
-        <img src="${result.icon_url}" alt="result icon">
+        <img src="${newUrl}" alt="result icon">
         <p>${result.fcttext}</p>
       </div>`;
 }

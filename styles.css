@@ -42,7 +42,7 @@ h1 {
   font-size: 1em;
   text-transform: uppercase;
   display: inline-block;
-  padding: 3%;
+  padding: 3% 2%;
 }
 
 form {
@@ -77,7 +77,7 @@ input {
   color: #ffffff;
   transition: background 500ms ease;
   margin-top: 1%;
-  margin-right: 1%;
+  margin-right: 1.75%;
   margin-bottom: 1%;
 }
 
