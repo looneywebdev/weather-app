@@ -11,6 +11,7 @@ This is a fun, simple way to check the weather for the current location or anoth
 - Either allow the browser to the get current location or manually input a zip code and search it.
 
     <img src="https://github.com/looneywebdev/weather-app/blob/master/locationpermission.png?raw=true " width="400">
+    <br>
     <img src="https://github.com/looneywebdev/weather-app/blob/master/zipcode-input.png?raw=true " width="400">
 
 - Select Almanac Data, Sunrise / Sunset Data, or Three Day Forecast for more weather information.
