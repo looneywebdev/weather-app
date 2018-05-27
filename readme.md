@@ -1,16 +1,17 @@
 # Weather App
-This is a weather app that requests the user's location and provides information to the user about the area's record temperatures, sunset and sunrise times, and a three day forecast.
+This is a weather app that either uses the current location of the user or zip code entered manually and can display the current conditions, record temperatures, sunrise/sunset times, and/or a three day forecast.
 ## Motivation
-This is the first Capstone project for the Thinkful Full Stack Flex program.
+This is a fun, simple way to check the weather for the current location or another zip code.
 ## Instructions
 - Installation not required.
 - Go to [Weather App](https://looneywebdev.github.io/weather-app/).
 
     <img src="https://github.com/looneywebdev/weather-app/blob/master/weatherapphome.png?raw=true" width="400">
  
-- Allow browser to get location.
+- Either allow the browser to the get current location or manually input a zip code and search it.
 
     <img src="https://github.com/looneywebdev/weather-app/blob/master/locationpermission.png?raw=true " width="400">
+    <img src="https://github.com/looneywebdev/weather-app/blob/master/zipcode-input.png?raw=true " width="400">
 
 - Select Almanac Data, Sunrise / Sunset Data, or Three Day Forecast for more weather information.
 
@@ -24,5 +25,3 @@ This is the first Capstone project for the Thinkful Full Stack Flex program.
 ### API Reference
 - [geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation)
 - [Weather Underground API Documentation](https://www.wunderground.com/weather/api/d/docs?d=index)
-
-
