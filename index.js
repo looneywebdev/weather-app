@@ -1,6 +1,11 @@
 let userInput = '';
 
-//function once location has been identified
+//function that gets location using geolocation api
+function getLocation() {
+    return navigator.geolocation.getCurrentPosition(success, error);
+}
+
+//when geolocation api is successfull, store user coordinates, display results buttons, and display current conditions
 function success(position) {
     console.log('successful');
     var lat = position.coords.latitude;
@@ -11,28 +16,33 @@ function success(position) {
     console.log(userInput);
 }
 
+//function if an error is identified
+function error() {
+    console.log('Submit manual zipzode.');
+    alert("There was an error retrieving your location. Sorry...smh.. Enter your zip code instead!");
+}
+
+
+//function that listens for zip code submit event, then displays result buttons and current conditions
+function searchFormSubmit() {
+    $('.js-form').submit(ev => {
+        ev.preventDefault();
+        const queryTarget = $(ev.currentTarget).find('#zipcode');
+        const query = queryTarget.val();
+        queryTarget.val('');
+        userInput = `${query}`;
+        console.log(userInput);
+        $('.buttons').removeClass('hidden');
+        callZipApi(userInput, displayWeatherData);
+    });
+}
+
 //individual click event listening functions
-function handleForecast() {
-    console.log("Listening for click on Forecast");
-    $('.forecast').on('click', function (ev){   
+function handleFindMe() {
+    console.log("Listening for click on Find Me");
+    $('.find-me').on('click', function(ev) {
         ev.preventDefault();
-        callForecastApi(userInput, displayForecast);
-    });
-}
-
-function handleSunrise() {
-    console.log("Listening for click on Sunrise");
-    $('.sunrise').on('click', function(ev) {
-        ev.preventDefault();
-        callSunsetApi(userInput, displaySunrise);
-    });
-}
-
-function handleAlmanac() {
-    console.log("Listening for click on Almanac");
-    $('.almanac').on('click', function(ev){
-        ev.preventDefault();
-        callAlmanacApi(userInput, displayAlmanac);
+        getLocation();
     });
 }
 
@@ -44,29 +54,31 @@ function handleCurrent() {
     });
 }
 
-function handleFindMe() {
-    console.log("Listening for click on Find Me");
-    $('.find-me').on('click', function(ev) {
+function handleAlmanac() {
+    console.log("Listening for click on Almanac");
+    $('.almanac').on('click', function(ev){
         ev.preventDefault();
-        getLocation();
+        callAlmanacApi(userInput, displayAlmanac);
     });
-  }
-
-// //function if an error is identified
-function error() {
-console.log('Submit manual zipzode.');
 }
 
-//function for current conditions given userInput
-function callApi(userInput, callback) {
-    const settings =  {
-        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/conditions/q/${userInput}.json`,
-        dataType: "jsonp",
-        success: callback
-    };
-    $.ajax(settings);
+function handleSunrise() {
+    console.log("Listening for click on Sunrise");
+    $('.sunrise').on('click', function(ev) {
+        ev.preventDefault();
+        callSunsetApi(userInput, displaySunrise);
+    });
 }
 
+function handleForecast() {
+    console.log("Listening for click on Forecast");
+    $('.forecast').on('click', function (ev){   
+        ev.preventDefault();
+        callForecastApi(userInput, displayForecast);
+    });
+}
+
+//function to display current conditions and then load buttons for the rest of the user experience
 function  displayWeatherData(result){
     $('.city-name').html(`<h2 class='city'>${result.current_observation.display_location.full}</h2>`);
 
@@ -79,10 +91,6 @@ function  displayWeatherData(result){
     );
 }
 
-
-
-//function to display current conditions and then load buttons for the rest of the user experience
-//display
 function displayCurrent(result) {
     const {
         display_location,
@@ -93,7 +101,6 @@ function displayCurrent(result) {
     } = result.current_observation;
     
     let newUrl = icon_url.replace(/http/i, 'https');
-    console.log(newUrl);
 
     $('.city-name').html(`<h2 class="city-name">${display_location.full}</h2>`);
 
@@ -107,15 +114,13 @@ function displayCurrent(result) {
 }
 
 //function that renders result content structure
-//printing image unsecurely
 function renderResult(result) {
     let newUrl = result.icon_url.replace(/http/i, 'https');
-    console.log(newUrl);
     return `<div class="forecast-data">
         <h3>${result.title}</h3>
         <img src="${newUrl}" alt="result icon">
         <p>${result.fcttext}</p>
-      </div>`;
+        </div>`;
 }
 
 //function that displays data in html to the end user
@@ -149,29 +154,10 @@ function displaySunrise(result) {
     );
 }
 
-//functions that send GET request to wunderground API
-
-function callSunsetApi(userInput, callback) {
+//functions for ajax requests given userInput
+function callApi(userInput, callback) {
     const settings =  {
-        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/astronomy/q/${userInput}.json`,
-        dataType: "jsonp",
-        success: callback
-    };
-    $.ajax(settings);
-}
-
-function callForecastApi(userInput, callback) {
-    const settings =  {
-        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/forecast/q/${userInput}.json`,
-        dataType: "jsonp",
-        success: callback
-    };
-    $.ajax(settings);
-}
-
-function callAlmanacApi(userInput, callback) {
-    const settings = {
-        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/almanac/q/${userInput}.json`,
+        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/conditions/q/${userInput}.json`,
         dataType: "jsonp",
         success: callback
     };
@@ -192,29 +178,39 @@ function callZipApi(userInput, callback) {
         url : `https://api.wunderground.com/api/5f1b6d8103e5bf4c/geolookup/conditions/q/${userInput}.json`,
         dataType : "jsonp",
         success: callback
-        };
-        $.ajax(settings);
+    };
+    $.ajax(settings);
 }
 
-//function that gets location using geolocation api
-function getLocation() {
-    return navigator.geolocation.getCurrentPosition(success, error);
-  }
+function callAlmanacApi(userInput, callback) {
+    const settings = {
+        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/almanac/q/${userInput}.json`,
+        dataType: "jsonp",
+        success: callback
+    };
+    $.ajax(settings);
+}
 
-//function that listens to manual input
-function searchFormSubmit() {
-    $('.js-form').submit(ev => {
-        ev.preventDefault();
-        const queryTarget = $(ev.currentTarget).find('#zipcode');
-        const query = queryTarget.val();
-        queryTarget.val('');
-        userInput = `${query}`;
-        console.log(userInput);
-        $('.buttons').removeClass('hidden');
-        callZipApi(userInput, displayWeatherData);
-    });
-  }
 
+function callSunsetApi(userInput, callback) {
+    const settings =  {
+        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/astronomy/q/${userInput}.json`,
+        dataType: "jsonp",
+        success: callback
+    };
+    $.ajax(settings);
+}
+
+function callForecastApi(userInput, callback) {
+    const settings =  {
+        url: `https://api.wunderground.com/api/5f1b6d8103e5bf4c/forecast/q/${userInput}.json`,
+        dataType: "jsonp",
+        success: callback
+    };
+    $.ajax(settings);
+}
+
+//functions to run when the document is ready
 $(document).ready(function (){
     searchFormSubmit();
     handleFindMe();  
@@ -222,4 +218,4 @@ $(document).ready(function (){
     handleSunrise();
     handleAlmanac();
     handleCurrent();
-  });
+});
