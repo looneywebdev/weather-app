@@ -8,13 +8,15 @@
     <link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet">
   </head>
   <body>
-    <main class="main" role="main">
+    <header role=banner>      
       <h1>Weather App</h1>
+    </header>
+    <main class="main" role="main">
       <div class="start">
       <p class="instructions words">Enter a Zip Code below or let me find you!</p>
       <button type="button" class="find-me button-right js-form" role="button">Find Me</button>
     </div>
-      <section class="actions">
+      <section class="actions" role="region">
         <div class="info">
         <form class="js-form"action="#">
             <label class="zip words" for="zipcode">Enter here!</label>
@@ -29,7 +31,7 @@
           <button type="button" class="forecast js-button" role="button">Three Day Forecast</button>
         </div>
         </section>
-        <section class="results">
+        <section class="results" role="region">
         <h2></h2>
         <div class="city-name">
         </div>
