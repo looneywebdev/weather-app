@@ -165,6 +165,7 @@ function displayAlmanac(result) {
     }
     $('.js-search-results')
     .html(`<section class="almanac-data">
+    <p>On this day in history...</p>
     <div class="high">
     <p><span class="record-high">${result.almanac.temp_high.record.F} F</span>
     <p><span class="year">${result.almanac.temp_high.recordyear}</p>
