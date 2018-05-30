@@ -18,7 +18,6 @@ function success(position) {
 
 //function if an error is identified
 function error() {
-    console.log('Submit manual zipzode.');
     alert("There was an error retrieving your location. Sorry...smh.. Enter your zip code instead!");
 }
 
@@ -58,7 +57,7 @@ function handleAlmanac() {
     console.log("Listening for click on Almanac");
     $('.almanac').on('click', function(ev){
         ev.preventDefault();
-        callAlmanacApi(userInput, displayAlmanac);
+        callAlmanacApi(userInput, displayAlmanac, displayError);
     });
 }
 
@@ -82,6 +81,13 @@ function handleForecast() {
 function  displayWeatherData(result){
     $('.city-name').html(`<h2 class='city'>${result.current_observation.display_location.full}</h2>`);
 
+    if (!result.current_observation || !result.current_observation.icon_url || !result.current_observation.temperature_string || !result.current_observation.relative_humidity
+        || !result.current_observation.wind_string
+    ){
+        displayError();
+        return;
+    }
+
     $('.js-search-results')
     .html(`
     <img class="picture" src="${result.current_observation.icon_url}">
@@ -102,7 +108,16 @@ function displayCurrent(result) {
     
     let newUrl = icon_url.replace(/http/i, 'https');
 
+
+
     $('.city-name').html(`<h2 class="city-name">${display_location.full}</h2>`);
+
+    if (!result.current_observation || !result.current_observation.icon_url || !result.current_observation.temperature_string || !result.current_observation.relative_humidity
+        || !result.current_observation.wind_string
+    ){
+        displayError();
+        return;
+    }
 
     $('.js-search-results')
         .html(`
@@ -125,11 +140,29 @@ function renderResult(result) {
 
 //function that displays data in html to the end user
 function displayForecast(result) {
+    console.log(result.forecast.txt_forecast.forecastday[0].fcttext)
+    if (!result.forecast.txt_forecast.forecastday[0].fcttext){
+    displayError();
+    return;
+    }
+    
     const results = result.forecast.txt_forecast.forecastday.map(renderResult);
+
     $('.js-search-results').html(results);
 }
 
+//function is necessary due to the inconsistency of the wunderground api response
+function displayError(){
+    $('.js-search-results').html( "I'm sorry, there was a server error. Please try again.");
+}
+
 function displayAlmanac(result) {
+    if (!result.almanac || !result.almanac.temp_high || !result.almanac.temp_high.record || !result.almanac.temp_high.record.F || !result.almanac.temp_high.recordyear || 
+        !result.almanac.temp_low || !result.almanac.temp_low.record || !result.almanac.temp_low.record.F || !result.almanac.temp_low.recordyear
+    ){
+        displayError();
+        return;
+    }
     $('.js-search-results')
     .html(`<section class="almanac-data">
     <div class="high">
@@ -145,6 +178,11 @@ function displayAlmanac(result) {
 }
 
 function displaySunrise(result) {
+    if (!result.sun_phase || !result.sun_phase.sunrise.hour || !result.sun_phase.sunrise.minute || !result.sun_phase.sunset.hour || !result.sun_phase.sunset.minute
+    ){
+        displayError();
+        return;
+    }
     $('.js-search-results')
     .html(`
     <section class="sunrise-sunset">
