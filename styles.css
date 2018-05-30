@@ -96,6 +96,8 @@ input {
 
 .button-right:hover {
   cursor: pointer;
+  border-radius: 30%;
+  transition: all 0.2s;
 }
 
 .hidden {
